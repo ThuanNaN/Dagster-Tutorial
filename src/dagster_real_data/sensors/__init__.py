@@ -1,0 +1,1 @@
+from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor

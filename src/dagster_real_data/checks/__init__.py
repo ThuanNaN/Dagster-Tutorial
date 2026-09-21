@@ -1,0 +1,2 @@
+from dagster_real_data.checks.weather_checks import weather_asset_checks
+from dagster_real_data.checks.wiki_checks import wiki_asset_checks

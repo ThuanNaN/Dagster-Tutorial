@@ -1,0 +1,3 @@
+from dagster_real_data.resources.open_meteo import OpenMeteoResource
+from dagster_real_data.resources.wikimedia import WikimediaResource
+from dagster_real_data.resources.io_manager import filesystem_io_manager
