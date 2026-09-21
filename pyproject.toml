@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dagster-real-data-pipeline"
+version = "0.1.0"
+description = "Dagster data engineering demo with real Open-Meteo and Wikimedia APIs"
+requires-python = ">=3.11"
+dependencies = [
+    "dagster>=1.9",
+    "dagster-webserver>=1.9",
+    "dagster-pandas>=1.9",
+    "pandas>=2.0",
+    "pyarrow>=14.0",
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+    "pydantic>=2.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-mock>=3.12",
+    "responses>=0.25",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.dagster]
+repository = "dagster_real_data.definitions:defs"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
