@@ -74,7 +74,8 @@ def test_filesystem_io_manager_write_json():
         data = [{"id": 1, "value": "test"}]
         manager.handle_output(context, data)
 
-        output_path = Path(tmpdir) / "test_asset" / "2026-01-01" / "output.json"
+        # Now uses tier-based path: bronze/test_asset/2026-01-01/output.json
+        output_path = Path(tmpdir) / "bronze" / "test_asset" / "2026-01-01" / "output.json"
         assert output_path.exists()
         with open(output_path) as f:
             loaded = json.load(f)
@@ -92,7 +93,8 @@ def test_filesystem_io_manager_write_dataframe():
         df = pd.DataFrame({"timestamp": ["2026-01-01"], "temperature_2m": [25.5]})
         manager.handle_output(context, df)
 
-        output_path = Path(tmpdir) / "weather_cleaned" / "2026-01-01" / "output.parquet"
+        # Silver tier for weather_cleaned
+        output_path = Path(tmpdir) / "silver" / "weather_cleaned" / "2026-01-01" / "output.parquet"
         assert output_path.exists()
         loaded = pd.read_parquet(output_path)
         assert len(loaded) == 1
@@ -102,13 +104,14 @@ def test_filesystem_io_manager_load_input():
     with tempfile.TemporaryDirectory() as tmpdir:
         manager = FilesystemIOManager(base_dir=tmpdir)
 
-        asset_dir = Path(tmpdir) / "test_asset" / "2026-01-01"
+        # Write test data with tier-based path (weather_historical → bronze tier)
+        asset_dir = Path(tmpdir) / "bronze" / "weather_historical" / "2026-01-01"
         asset_dir.mkdir(parents=True, exist_ok=True)
         with open(asset_dir / "output.json", "w") as f:
             json.dump([{"id": 1}], f)
 
         context = MagicMock()
-        context.upstream_asset_key.path = ["test_asset"]
+        context.upstream_asset_key.path = ["weather_historical"]
         context.asset_partitions_decorated = "2026-01-01"
 
         result = manager.load_input(context)
