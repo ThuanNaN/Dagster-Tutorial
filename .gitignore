@@ -221,3 +221,4 @@ claude-openrouter.sh
 
 # Project data
 data/
+.DS_Store
