@@ -26,7 +26,7 @@ class OpenMeteoResource(ConfigurableResource):
         return HttpClient(config)
 
     def get_forecast(
-        self, forecast_days: int = 7, hourly_params: list | None = None, daily_params: list | None = None
+        self, forecast_days: int = 7, hourly_params: list | None = None, daily_params: list | None = None, past_days: int | None = None
     ) -> dict:
         client = self._get_client()
         params = {
@@ -37,6 +37,8 @@ class OpenMeteoResource(ConfigurableResource):
             "hourly": ",".join(hourly_params or ["temperature_2m", "relative_humidity_2m", "precipitation", "wind_speed_10m"]),
             "daily": ",".join(daily_params or ["temperature_2m_max", "temperature_2m_min", "precipitation_sum"]),
         }
+        if past_days is not None:
+            params["past_days"] = past_days
         logger.info("Fetching forecast for %s,%s", self.latitude, self.longitude)
         return client.get_json("v1/forecast", params)
 

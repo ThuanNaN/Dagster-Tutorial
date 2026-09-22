@@ -78,7 +78,7 @@ def weather_hourly(context: AssetExecutionContext, open_meteo: OpenMeteoResource
 )
 def weather_forecast(context: AssetExecutionContext, open_meteo: OpenMeteoResource) -> pd.DataFrame:
     logger.info("Fetching weather forecast for partition=%s", context.partition_key)
-    forecast_data = open_meteo.get_forecast(forecast_days=7)
+    forecast_data = open_meteo.get_forecast(forecast_days=7, past_days=7)
 
     hourly = forecast_data.get("hourly", {})
     timestamps = hourly.get("time", [])
@@ -170,7 +170,11 @@ def forecast_accuracy(
     hist_df = pd.DataFrame(historical)
     hist_df["timestamp"] = hist_df["timestamp"].astype(str)
 
-    merged = forecast.merge(
+    forecast_df = forecast.copy()
+    forecast_df = forecast_df.rename(columns={"forecast_timestamp": "timestamp"})
+    forecast_df["timestamp"] = forecast_df["timestamp"].astype(str)
+
+    merged = forecast_df.merge(
         hist_df[["timestamp", "temperature_2m"]],
         on="timestamp",
         how="inner",
