@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  duckdb:
+    build:
+      context: .
+      dockerfile: Duckfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  metabase:
+    image: metabase/metabase:latest
+    platform: linux/amd64
+    ports:
+      - "3000:3000"
+    environment:
+      - MB_JETTY_PORT=3000
+    depends_on:
+      duckdb:
+        condition: service_healthy
