@@ -31,7 +31,7 @@ def wiki_events_raw(context: AssetExecutionContext, wikimedia: WikimediaResource
     partitions_def=wiki_partitions,
     io_manager_key="io",
     description="Cleaned and deduplicated Wiki events",
-    ins={"raw": AssetIn(key_prefix=["wiki_events_raw"])},
+    ins={"raw": AssetIn(key=["wiki_events_raw"])},
 )
 def wiki_events_cleaned(context: AssetExecutionContext, raw: list[dict]) -> pd.DataFrame:
     logger.info("Cleaning wiki events for partition=%s", context.partition_key)
@@ -56,7 +56,7 @@ def wiki_events_cleaned(context: AssetExecutionContext, raw: list[dict]) -> pd.D
     partitions_def=wiki_partitions,
     io_manager_key="io",
     description="Wiki events aggregated by hour",
-    ins={"cleaned": AssetIn(key_prefix=["wiki_events_cleaned"])},
+    ins={"cleaned": AssetIn(key=["wiki_events_cleaned"])},
 )
 def wiki_events_by_hour(context: AssetExecutionContext, cleaned: pd.DataFrame) -> pd.DataFrame:
     logger.info("Aggregating wiki events by hour for partition=%s", context.partition_key)
@@ -78,7 +78,7 @@ def wiki_events_by_hour(context: AssetExecutionContext, cleaned: pd.DataFrame) -
     partitions_def=wiki_partitions,
     io_manager_key="io",
     description="Daily Wiki analytics summaries",
-    ins={"by_hour": AssetIn(key_prefix=["wiki_events_by_hour"])},
+    ins={"by_hour": AssetIn(key=["wiki_events_by_hour"])},
 )
 def wiki_daily_analytics(context: AssetExecutionContext, by_hour: pd.DataFrame) -> pd.DataFrame:
     logger.info("Computing daily wiki analytics for partition=%s", context.partition_key)

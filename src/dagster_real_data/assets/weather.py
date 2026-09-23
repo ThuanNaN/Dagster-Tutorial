@@ -101,8 +101,8 @@ def weather_forecast(context: AssetExecutionContext, open_meteo: OpenMeteoResour
     io_manager_key="io",
     description="Cleaned weather data with validation rules",
     ins={
-        "historical": AssetIn(key_prefix=["weather_historical"]),
-        "hourly": AssetIn(key_prefix=["weather_hourly"]),
+        "historical": AssetIn(key=["weather_historical"]),
+        "hourly": AssetIn(key=["weather_hourly"]),
     },
 )
 def weather_cleaned(
@@ -132,7 +132,7 @@ def weather_cleaned(
     partitions_def=weather_partitions,
     io_manager_key="io",
     description="Daily weather analytics aggregations",
-    ins={"cleaned": AssetIn(key_prefix=["weather_cleaned"])},
+    ins={"cleaned": AssetIn(key=["weather_cleaned"])},
 )
 def weather_daily(context: AssetExecutionContext, cleaned: pd.DataFrame) -> pd.DataFrame:
     logger.info("Computing daily analytics for partition=%s", context.partition_key)
@@ -156,8 +156,8 @@ def weather_daily(context: AssetExecutionContext, cleaned: pd.DataFrame) -> pd.D
     io_manager_key="io",
     description="Compare forecast vs historical actuals with MAE, RMSE, and bias metrics",
     ins={
-        "forecast": AssetIn(key_prefix=["weather_forecast"]),
-        "historical": AssetIn(key_prefix=["weather_historical"]),
+        "forecast": AssetIn(key=["weather_forecast"]),
+        "historical": AssetIn(key=["weather_historical"]),
     },
 )
 def forecast_accuracy(

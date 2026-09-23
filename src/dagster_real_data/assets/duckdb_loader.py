@@ -56,10 +56,10 @@ class DuckDBLoadAsset:
     name="duckdb_tables",
     description="Loads all parquet data from Bronze/Silver/Gold tiers into DuckDB tables",
     ins={
-        "weather_historical": AssetIn("weather_historical"),
-        "weather_hourly": AssetIn("weather_hourly"),
-        "weather_forecast": AssetIn("weather_forecast"),
-        "wiki_events_raw": AssetIn("wiki_events_raw"),
+        "weather_historical": AssetIn(key=["weather_historical"]),
+        "weather_hourly": AssetIn(key=["weather_hourly"]),
+        "weather_forecast": AssetIn(key=["weather_forecast"]),
+        "wiki_events_raw": AssetIn(key=["wiki_events_raw"]),
     },
 )
 def duckdb_tables_load(
