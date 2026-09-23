@@ -1,2 +1,3 @@
 from dagster_real_data.assets.weather import weather_assets
 from dagster_real_data.assets.wikipedia import wiki_assets
+from dagster_real_data.assets.duckdb_loader import duckdb_tables_load
