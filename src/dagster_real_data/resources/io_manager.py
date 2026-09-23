@@ -52,7 +52,7 @@ class FilesystemIOManager(IOManager):
     def handle_output(self, context: OutputContext, obj: Any) -> None:
         asset_name = context.asset_key.path[-1]
         tier = _get_tier(asset_name)
-        partition = context.asset_partitions_decorated or ""
+        partition = context.asset_partition_key or ""
         partition_str = str(partition) if partition else "latest"
         output_dir = self.base_dir / tier / asset_name / partition_str
         output_dir.mkdir(parents=True, exist_ok=True)
@@ -75,7 +75,7 @@ class FilesystemIOManager(IOManager):
         upstream_key = context.upstream_asset_key
         asset_name = upstream_key.path[-1] if upstream_key else context.asset_key.path[-1]
         tier = _get_tier(asset_name)
-        partition = context.asset_partitions_decorated or ""
+        partition = context.asset_partition_key or ""
         partition_str = str(partition) if partition else "latest"
         input_dir = self.base_dir / tier / asset_name / partition_str
 
