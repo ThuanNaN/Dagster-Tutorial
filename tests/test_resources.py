@@ -7,6 +7,7 @@ from pathlib import Path
 
 from dagster_real_data.resources.open_meteo import OpenMeteoResource
 from dagster_real_data.resources.wikimedia import WikimediaResource
+from dagster_real_data.resources.duckdb import DuckDBResource
 from dagster_real_data.resources.io_manager import FilesystemIOManager
 
 
@@ -98,6 +99,19 @@ def test_filesystem_io_manager_write_dataframe():
         assert output_path.exists()
         loaded = pd.read_parquet(output_path)
         assert len(loaded) == 1
+
+
+def test_duckdb_resource_default_config():
+    resource = DuckDBResource()
+    assert resource.host == "localhost"
+    assert resource.port == 8080
+    assert resource.database == "mydb.duckdb"
+
+
+def test_duckdb_resource_connection_string():
+    resource = DuckDBResource(host="localhost", port=8080, database="analytics.duckdb")
+    conn_str = resource.get_connection_url()
+    assert conn_str == "http://localhost:8080/analytics.duckdb"
 
 
 def test_filesystem_io_manager_load_input():
