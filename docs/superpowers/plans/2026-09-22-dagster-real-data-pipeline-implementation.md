@@ -31,7 +31,7 @@
 pyproject.toml                          # Project config, dependencies
 .env.example                            # Environment template
 README.md                               # Project documentation
-src/dagster_real_data/
+src/dagster_pipeline/
   __init__.py                           # Package init
   definitions.py                         # Dagster Definitions (all assets, resources, checks, schedules, sensors)
   assets/
@@ -77,9 +77,9 @@ docs/
 
 ## Task 1: Project Bootstrap
 
-**Files:** `pyproject.toml`, `.env.example`, `README.md`, `src/dagster_real_data/__init__.py`
+**Files:** `pyproject.toml`, `.env.example`, `README.md`, `src/dagster_pipeline/__init__.py`
 
-**Interfaces:** Package `dagster_real_data` must be importable; `dagster dev` must start successfully.
+**Interfaces:** Package `dagster_pipeline` must be importable; `dagster dev` must start successfully.
 
 ### Task 1.1: Create `pyproject.toml`
 
@@ -117,7 +117,7 @@ dev = [
 where = ["src"]
 
 [tool.dagster]
-repository = "dagster_real_data.definitions:defs"
+repository = "dagster_pipeline.definitions:defs"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -169,32 +169,32 @@ git commit -m "feat: add .env.example with all configuration variables"
 - [ ] **Step 1:** Create directory structure
 
 ```bash
-mkdir -p src/dagster_real_data/{assets,resources,checks,schedules,sensors,utils}
+mkdir -p src/dagster_pipeline/{assets,resources,checks,schedules,sensors,utils}
 mkdir -p tests data/{raw,cleaned,analytics} docs
-touch src/dagster_real_data/{__init__,assets/__init__,resources/__init__,checks/__init__,schedules/__init__,sensors/__init__,utils/__init__}.py
+touch src/dagster_pipeline/{__init__,assets/__init__,resources/__init__,checks/__init__,schedules/__init__,sensors/__init__,utils/__init__}.py
 ```
 
-- [ ] **Step 2:** Write `src/dagster_real_data/__init__.py`
+- [ ] **Step 2:** Write `src/dagster_pipeline/__init__.py`
 
 ```python
 """Dagster Real Data Pipeline — a demo project with real APIs."""
 ```
 
-- [ ] **Step 3:** Write `src/dagster_real_data/definitions.py`
+- [ ] **Step 3:** Write `src/dagster_pipeline/definitions.py`
 
 ```python
 """Dagster Definitions — central orchestration point."""
 from dagster import Definitions
 
-from dagster_real_data.assets.weather import weather_assets
-from dagster_real_data.assets.wikipedia import wiki_assets
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.io_manager import filesystem_io_manager
-from dagster_real_data.checks.weather_checks import weather_asset_checks
-from dagster_real_data.checks.wiki_checks import wiki_asset_checks
-from dagster_real_data.schedules.weather_schedule import weather_daily_schedule
-from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager
+from dagster_pipeline.checks.weather_checks import weather_asset_checks
+from dagster_pipeline.checks.wiki_checks import wiki_asset_checks
+from dagster_pipeline.schedules.weather_schedule import weather_daily_schedule
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor
 
 defs = Definitions(
     assets=[*weather_assets, *wiki_assets],
@@ -212,10 +212,10 @@ defs = Definitions(
 - [ ] **Step 4:** Commit
 
 ```bash
-git add src/dagster_real_data/__init__.py src/dagster_real_data/definitions.py
-git add src/dagster_real_data/assets/__init__.py src/dagster_real_data/resources/__init__.py
-git add src/dagster_real_data/checks/__init__.py src/dagster_real_data/schedules/__init__.py
-git add src/dagster_real_data/sensors/__init__.py src/dagster_real_data/utils/__init__.py
+git add src/dagster_pipeline/__init__.py src/dagster_pipeline/definitions.py
+git add src/dagster_pipeline/assets/__init__.py src/dagster_pipeline/resources/__init__.py
+git add src/dagster_pipeline/checks/__init__.py src/dagster_pipeline/schedules/__init__.py
+git add src/dagster_pipeline/sensors/__init__.py src/dagster_pipeline/utils/__init__.py
 git commit -m "feat: create package structure and Definitions"
 ```
 
@@ -311,7 +311,7 @@ pip install -e ".[dev]" 2>&1 | tail -5
 - [ ] **Step 2:** Verify definitions import
 
 ```bash
-python -c "from dagster_real_data.definitions import defs; print('Definitions loaded successfully')"
+python -c "from dagster_pipeline.definitions import defs; print('Definitions loaded successfully')"
 ```
 
 - [ ] **Step 3:** Start Dagster (verify it loads)
@@ -330,13 +330,13 @@ git commit --allow-empty -m "feat: bootstrap project — dagster dev starts"
 
 ## Task 2: HTTP Utilities and Open-Meteo Resource
 
-**Files:** `src/dagster_real_data/utils/http.py`, `src/dagster_real_data/resources/open_meteo.py`, `tests/test_resources.py`
+**Files:** `src/dagster_pipeline/utils/http.py`, `src/dagster_pipeline/resources/open_meteo.py`, `tests/test_resources.py`
 
 **Interfaces:** `OpenMeteoResource` must make real HTTP calls to Open-Meteo APIs with retry logic.
 
 ### Task 2.1: Create `utils/http.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/utils/http.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/utils/http.py`
 
 ```python
 """HTTP client utilities with retry and timeout."""
@@ -392,13 +392,13 @@ class HttpClient:
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/utils/http.py
+git add src/dagster_pipeline/utils/http.py
 git commit -m "feat: add HTTP client with retry"
 ```
 
 ### Task 2.2: Create `utils/time.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/utils/time.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/utils/time.py`
 
 ```python
 """Time and date utilities."""
@@ -425,13 +425,13 @@ def date_range(start: date, end: date) -> list[date]:
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/utils/time.py
+git add src/dagster_pipeline/utils/time.py
 git commit -m "feat: add time utilities"
 ```
 
 ### Task 2.3: Create `utils/validation.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/utils/validation.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/utils/validation.py`
 
 ```python
 """Data validation helpers."""
@@ -459,13 +459,13 @@ def validate_non_negative(value: float, field_name: str = "value") -> float:
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/utils/validation.py
+git add src/dagster_pipeline/utils/validation.py
 git commit -m "feat: add validation utilities"
 ```
 
 ### Task 2.4: Create `resources/open_meteo.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/resources/open_meteo.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/resources/open_meteo.py`
 
 ```python
 """Open-Meteo resource for weather data retrieval."""
@@ -474,8 +474,8 @@ from dataclasses import dataclass
 
 from dagster import ConfigurableResource, EnvVar
 
-from dagster_real_data.utils.http import HttpClient, HttpClientConfig
-from dagster_real_data.utils.time import format_date
+from dagster_pipeline.utils.http import HttpClient, HttpClientConfig
+from dagster_pipeline.utils.time import format_date
 
 logger = logging.getLogger(__name__)
 
@@ -552,7 +552,7 @@ class OpenMeteoResource:
 ```python
 import pytest
 from unittest.mock import patch, MagicMock
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
 
 
 def test_open_meteo_resource_creation():
@@ -566,7 +566,7 @@ def test_open_meteo_resource_creation():
     assert resource.latitude == 21.0285
 
 
-@patch("dagster_real_data.resources.open_meteo.HttpClient")
+@patch("dagster_pipeline.resources.open_meteo.HttpClient")
 def test_get_forecast_calls_api(MockHttpClient):
     mock_client = MagicMock()
     mock_client.get_json.return_value = {"hourly": {"time": ["2026-01-01T00:00"]}}
@@ -593,8 +593,8 @@ pytest tests/test_resources.py -v
 - [ ] **Step 4:** Commit
 
 ```bash
-git add src/dagster_real_data/resources/open_meteo.py tests/test_resources.py src/dagster_real_data/utils/http.py src/dagster_real_data/utils/time.py src/dagster_real_data/utils/validation.py
-git add src/dagster_real_data/resources/__init__.py
+git add src/dagster_pipeline/resources/open_meteo.py tests/test_resources.py src/dagster_pipeline/utils/http.py src/dagster_pipeline/utils/time.py src/dagster_pipeline/utils/validation.py
+git add src/dagster_pipeline/resources/__init__.py
 git commit -m "feat: add OpenMeteoResource with HTTP utilities and tests"
 ```
 
@@ -603,15 +603,15 @@ git commit -m "feat: add OpenMeteoResource with HTTP utilities and tests"
 - [ ] **Step 1:** Write exports
 
 ```python
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.io_manager import filesystem_io_manager
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager
 ```
 
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/resources/__init__.py
+git add src/dagster_pipeline/resources/__init__.py
 git commit -m "feat: update resources __init__ exports"
 ```
 
@@ -619,13 +619,13 @@ git commit -m "feat: update resources __init__ exports"
 
 ## Task 3: Wikimedia Resource
 
-**Files:** `src/dagster_real_data/resources/wikimedia.py`, `src/dagster_real_data/resources/__init__.py`
+**Files:** `src/dagster_pipeline/resources/wikimedia.py`, `src/dagster_pipeline/resources/__init__.py`
 
 **Interfaces:** `WikimediaResource.stream_events()` must parse SSE events with bounded event count and cursor tracking.
 
 ### Task 3.1: Create `resources/wikimedia.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/resources/wikimedia.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/resources/wikimedia.py`
 
 ```python
 """Wikimedia EventStreams resource for SSE ingestion."""
@@ -720,7 +720,7 @@ class WikimediaResource:
 ```python
 import pytest
 from unittest.mock import patch, MagicMock
-from dagster_real_data.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
 
 
 def test_wikimedia_resource_creation():
@@ -755,7 +755,7 @@ pytest tests/test_resources.py -v
 - [ ] **Step 5:** Commit
 
 ```bash
-git add src/dagster_real_data/resources/wikimedia.py tests/test_resources.py
+git add src/dagster_pipeline/resources/wikimedia.py tests/test_resources.py
 git commit -m "feat: add WikimediaResource with SSE streaming and tests"
 ```
 
@@ -763,13 +763,13 @@ git commit -m "feat: add WikimediaResource with SSE streaming and tests"
 
 ## Task 4: Filesystem IOManager
 
-**Files:** `src/dagster_real_data/resources/io_manager.py`, `tests/test_resources.py`
+**Files:** `src/dagster_pipeline/resources/io_manager.py`, `tests/test_resources.py`
 
 **Interfaces:** `filesystem_io_manager` must persist asset outputs to filesystem and load inputs from filesystem with partition-aware paths.
 
 ### Task 4.1: Create `resources/io_manager.py`
 
-- [ ] **Step 1:** Write `src/dagster_real_data/resources/io_manager.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/resources/io_manager.py`
 
 ```python
 """Filesystem IOManager for persisting assets as JSON/Parquet."""
@@ -859,7 +859,7 @@ import tempfile
 import json
 from pathlib import Path
 from unittest.mock import MagicMock
-from dagster_real_data.resources.io_manager import FilesystemIOManager
+from dagster_pipeline.resources.io_manager import FilesystemIOManager
 
 
 def test_filesystem_io_manager_write_json():
@@ -905,7 +905,7 @@ pytest tests/test_resources.py -v
 - [ ] **Step 4:** Commit
 
 ```bash
-git add src/dagster_real_data/resources/io_manager.py tests/test_resources.py
+git add src/dagster_pipeline/resources/io_manager.py tests/test_resources.py
 git commit -m "feat: add FilesystemIOManager with partition-aware paths and tests"
 ```
 
@@ -913,13 +913,13 @@ git commit -m "feat: add FilesystemIOManager with partition-aware paths and test
 
 ## Task 5: Weather Assets — Historical and Hourly
 
-**Files:** `src/dagster_real_data/assets/weather.py`, `tests/test_weather_assets.py`
+**Files:** `src/dagster_pipeline/assets/weather.py`, `tests/test_weather_assets.py`
 
 **Interfaces:** `weather_historical` and `weather_hourly` must produce real data from Open-Meteo APIs and persist to filesystem.
 
 ### Task 5.1: Write weather assets
 
-- [ ] **Step 1:** Write `src/dagster_real_data/assets/weather.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/assets/weather.py`
 
 ```python
 """Weather assets — historical, hourly, forecast, cleaned, daily."""
@@ -929,9 +929,9 @@ from datetime import date, timedelta
 import pandas as pd
 from dagster import AssetExecutionContext, asset, DailyPartitionsDefinition, AssetIn
 
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.io_manager import FilesystemIOManager
-from dagster_real_data.utils.time import format_date, parse_date, date_range
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.io_manager import FilesystemIOManager
+from dagster_pipeline.utils.time import format_date, parse_date, date_range
 
 logger = logging.getLogger(__name__)
 
@@ -1020,8 +1020,8 @@ from typing import Any
 import pandas as pd
 from dagster import AssetExecutionContext, asset, DailyPartitionsDefinition, Definitions, AssetIn
 
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.utils.time import format_date, parse_date, date_range
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.utils.time import format_date, parse_date, date_range
 
 logger = logging.getLogger(__name__)
 
@@ -1088,7 +1088,7 @@ def weather_hourly(context: AssetExecutionContext, open_meteo: OpenMeteoResource
 - [ ] **Step 2:** Update `assets/__init__.py`
 
 ```python
-from dagster_real_data.assets.weather import weather_assets
+from dagster_pipeline.assets.weather import weather_assets
 
 weather_assets = [weather_historical, weather_hourly]
 ```
@@ -1096,8 +1096,8 @@ weather_assets = [weather_historical, weather_hourly]
 Wait, let me use the proper Dagster `AssetsDefinition` collection pattern. Actually, for simplicity, I'll collect assets in a list:
 
 ```python
-from dagster_real_data.assets.weather import weather_historical, weather_hourly, weather_forecast, weather_cleaned, weather_daily, forecast_accuracy
-from dagster_real_data.assets.wikipedia import wiki_events_raw, wiki_events_cleaned, wiki_events_by_hour, wiki_daily_analytics
+from dagster_pipeline.assets.weather import weather_historical, weather_hourly, weather_forecast, weather_cleaned, weather_daily, forecast_accuracy
+from dagster_pipeline.assets.wikipedia import wiki_events_raw, wiki_events_cleaned, wiki_events_by_hour, wiki_daily_analytics
 
 weather_assets = [weather_historical, weather_hourly, weather_forecast, weather_cleaned, weather_daily, forecast_accuracy]
 wiki_assets = [wiki_events_raw, wiki_events_cleaned, wiki_events_by_hour, wiki_daily_analytics]
@@ -1108,8 +1108,8 @@ wiki_assets = [wiki_events_raw, wiki_events_cleaned, wiki_events_by_hour, wiki_d
 ```python
 import pytest
 from unittest.mock import MagicMock, patch
-from dagster_real_data.assets.weather import weather_historical, weather_hourly
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.assets.weather import weather_historical, weather_hourly
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
 
 
 def test_weather_historical_calls_api():
@@ -1154,7 +1154,7 @@ pytest tests/test_weather_assets.py -v
 - [ ] **Step 5:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/weather.py src/dagster_real_data/assets/__init__.py tests/test_weather_assets.py
+git add src/dagster_pipeline/assets/weather.py src/dagster_pipeline/assets/__init__.py tests/test_weather_assets.py
 git commit -m "feat: add weather_historical and weather_hourly assets with tests"
 ```
 
@@ -1163,8 +1163,8 @@ git commit -m "feat: add weather_historical and weather_hourly assets with tests
 - [ ] **Step 1:** Update `definitions.py` to import weather_assets properly
 
 ```python
-from dagster_real_data.assets.weather import weather_assets
-from dagster_real_data.assets.wikipedia import wiki_assets
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
 
 defs = Definitions(
     assets=[*weather_assets, *wiki_assets],
@@ -1176,7 +1176,7 @@ defs = Definitions(
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/definitions.py
+git add src/dagster_pipeline/definitions.py
 git commit -m "feat: update definitions.py with weather assets"
 ```
 
@@ -1184,7 +1184,7 @@ git commit -m "feat: update definitions.py with weather assets"
 
 ## Task 6: Weather Assets — Forecast, Cleaned, Daily, Forecast Accuracy
 
-**Files:** `src/dagster_real_data/assets/weather.py` (additions), `tests/test_weather_assets.py` (additions)
+**Files:** `src/dagster_pipeline/assets/weather.py` (additions), `tests/test_weather_assets.py` (additions)
 
 ### Task 6.1: Add `weather_forecast` asset
 
@@ -1218,7 +1218,7 @@ def weather_forecast(context: AssetExecutionContext, open_meteo: OpenMeteoResour
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/weather.py
+git add src/dagster_pipeline/assets/weather.py
 git commit -m "feat: add weather_forecast asset"
 ```
 
@@ -1265,7 +1265,7 @@ def weather_cleaned(
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/weather.py
+git add src/dagster_pipeline/assets/weather.py
 git commit -m "feat: add weather_cleaned asset with validation"
 ```
 
@@ -1300,7 +1300,7 @@ def weather_daily(context: AssetExecutionContext, cleaned: pd.DataFrame) -> pd.D
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/weather.py
+git add src/dagster_pipeline/assets/weather.py
 git commit -m "feat: add weather_daily asset"
 ```
 
@@ -1362,11 +1362,11 @@ def forecast_accuracy(
 - [ ] **Step 2:** Update `assets/__init__.py`
 
 ```python
-from dagster_real_data.assets.weather import (
+from dagster_pipeline.assets.weather import (
     weather_historical, weather_hourly, weather_forecast,
     weather_cleaned, weather_daily, forecast_accuracy,
 )
-from dagster_real_data.assets.wikipedia import (
+from dagster_pipeline.assets.wikipedia import (
     wiki_events_raw, wiki_events_cleaned,
     wiki_events_by_hour, wiki_daily_analytics,
 )
@@ -1380,7 +1380,7 @@ wiki_assets = [wiki_events_raw, wiki_events_cleaned, wiki_events_by_hour, wiki_d
 ```python
 import pytest
 import pandas as pd
-from dagster_real_data.assets.weather import forecast_accuracy
+from dagster_pipeline.assets.weather import forecast_accuracy
 
 
 def test_forecast_accuracy_computes_metrics():
@@ -1420,7 +1420,7 @@ pytest tests/test_weather_assets.py -v
 - [ ] **Step 5:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/weather.py src/dagster_real_data/assets/__init__.py tests/test_weather_assets.py
+git add src/dagster_pipeline/assets/weather.py src/dagster_pipeline/assets/__init__.py tests/test_weather_assets.py
 git commit -m "feat: add weather_forecast, weather_cleaned, weather_daily, forecast_accuracy assets"
 ```
 
@@ -1428,11 +1428,11 @@ git commit -m "feat: add weather_forecast, weather_cleaned, weather_daily, forec
 
 ## Task 7: Wiki Assets
 
-**Files:** `src/dagster_real_data/assets/wikipedia.py`, `tests/test_wiki_assets.py`
+**Files:** `src/dagster_pipeline/assets/wikipedia.py`, `tests/test_wiki_assets.py`
 
 ### Task 7.1: Write wiki assets
 
-- [ ] **Step 1:** Write `src/dagster_real_data/assets/wikipedia.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/assets/wikipedia.py`
 
 ```python
 """Wiki assets — raw events, cleaned, by_hour, daily_analytics."""
@@ -1442,8 +1442,8 @@ from datetime import datetime
 import pandas as pd
 from dagster import AssetExecutionContext, asset, DailyPartitionsDefinition, AssetIn
 
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.utils.validation import validate_field
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.utils.validation import validate_field
 
 logger = logging.getLogger(__name__)
 
@@ -1540,7 +1540,7 @@ def wiki_daily_analytics(context: AssetExecutionContext, by_hour: pd.DataFrame) 
 ```python
 import pytest
 import pandas as pd
-from dagster_real_data.assets.wikipedia import wiki_events_cleaned, wiki_events_by_hour, wiki_daily_analytics
+from dagster_pipeline.assets.wikipedia import wiki_events_cleaned, wiki_events_by_hour, wiki_daily_analytics
 
 
 def test_wiki_events_cleaned_deduplicates():
@@ -1597,7 +1597,7 @@ pytest tests/test_wiki_assets.py -v
 - [ ] **Step 5:** Commit
 
 ```bash
-git add src/dagster_real_data/assets/wikipedia.py tests/test_wiki_assets.py src/dagster_real_data/assets/__init__.py
+git add src/dagster_pipeline/assets/wikipedia.py tests/test_wiki_assets.py src/dagster_pipeline/assets/__init__.py
 git commit -m "feat: add wiki assets with tests"
 ```
 
@@ -1605,11 +1605,11 @@ git commit -m "feat: add wiki assets with tests"
 
 ## Task 8: Asset Checks
 
-**Files:** `src/dagster_real_data/checks/weather_checks.py`, `src/dagster_real_data/checks/wiki_checks.py`, `tests/test_checks.py`
+**Files:** `src/dagster_pipeline/checks/weather_checks.py`, `src/dagster_pipeline/checks/wiki_checks.py`, `tests/test_checks.py`
 
 ### Task 8.1: Create weather checks
 
-- [ ] **Step 1:** Write `src/dagster_real_data/checks/weather_checks.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/checks/weather_checks.py`
 
 ```python
 """Asset checks for weather data quality."""
@@ -1722,7 +1722,7 @@ def temperature_not_null(weather_cleaned: pd.DataFrame) -> AssetCheckResult:
 
 Let me use the most compatible approach:
 
-- [ ] **Step 1:** Write `src/dagster_real_data/checks/weather_checks.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/checks/weather_checks.py`
 
 ```python
 """Asset checks for weather data quality."""
@@ -1787,7 +1787,7 @@ def minimum_row_count(weather_cleaned) -> AssetCheckEvalResult:
 weather_asset_checks = [temperature_not_null, humidity_valid, precipitation_non_negative, minimum_row_count]
 ```
 
-- [ ] **Step 2:** Write wiki checks in `src/dagster_real_data/checks/wiki_checks.py`
+- [ ] **Step 2:** Write wiki checks in `src/dagster_pipeline/checks/wiki_checks.py`
 
 ```python
 """Asset checks for Wiki data quality."""
@@ -1841,8 +1841,8 @@ wiki_asset_checks = [event_id_unique, timestamp_not_null, wiki_not_null, minimum
 - [ ] **Step 3:** Update `checks/__init__.py`
 
 ```python
-from dagster_real_data.checks.weather_checks import weather_asset_checks
-from dagster_real_data.checks.wiki_checks import wiki_asset_checks
+from dagster_pipeline.checks.weather_checks import weather_asset_checks
+from dagster_pipeline.checks.wiki_checks import wiki_asset_checks
 ```
 
 - [ ] **Step 4:** Write tests
@@ -1850,7 +1850,7 @@ from dagster_real_data.checks.wiki_checks import wiki_asset_checks
 ```python
 import pytest
 import pandas as pd
-from dagster_real_data.checks.weather_checks import temperature_not_null, humidity_valid, precipitation_non_negative, minimum_row_count
+from dagster_pipeline.checks.weather_checks import temperature_not_null, humidity_valid, precipitation_non_negative, minimum_row_count
 
 
 def test_temperature_not_null_pass():
@@ -1898,7 +1898,7 @@ pytest tests/test_checks.py -v
 - [ ] **Step 6:** Commit
 
 ```bash
-git add src/dagster_real_data/checks/weather_checks.py src/dagster_real_data/checks/wiki_checks.py src/dagster_real_data/checks/__init__.py tests/test_checks.py
+git add src/dagster_pipeline/checks/weather_checks.py src/dagster_pipeline/checks/wiki_checks.py src/dagster_pipeline/checks/__init__.py tests/test_checks.py
 git commit -m "feat: add asset checks for weather and wiki with tests"
 ```
 
@@ -1907,8 +1907,8 @@ git commit -m "feat: add asset checks for weather and wiki with tests"
 - [ ] **Step 1:** Update `definitions.py` to include checks
 
 ```python
-from dagster_real_data.checks.weather_checks import weather_asset_checks
-from dagster_real_data.checks.wiki_checks import wiki_asset_checks
+from dagster_pipeline.checks.weather_checks import weather_asset_checks
+from dagster_pipeline.checks.wiki_checks import wiki_asset_checks
 
 defs = Definitions(
     assets=[*weather_assets, *wiki_assets],
@@ -1922,7 +1922,7 @@ defs = Definitions(
 - [ ] **Step 2:** Commit
 
 ```bash
-git add src/dagster_real_data/definitions.py
+git add src/dagster_pipeline/definitions.py
 git commit -m "feat: add asset checks to Definitions"
 ```
 
@@ -1930,17 +1930,17 @@ git commit -m "feat: add asset checks to Definitions"
 
 ## Task 9: Schedule and Sensor
 
-**Files:** `src/dagster_real_data/schedules/weather_schedule.py`, `src/dagster_real_data/sensors/wiki_sensor.py`
+**Files:** `src/dagster_pipeline/schedules/weather_schedule.py`, `src/dagster_pipeline/sensors/wiki_sensor.py`
 
 ### Task 9.1: Create weather schedule
 
-- [ ] **Step 1:** Write `src/dagster_real_data/schedules/weather_schedule.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/schedules/weather_schedule.py`
 
 ```python
 """Daily weather schedule — runs at 23:00 UTC."""
 from dagster import ScheduleDefinition, DailyPartitionsDefinition, ScheduleExecutionResult, AssetKey
 
-from dagster_real_data.assets.weather import weather_partitions
+from dagster_pipeline.assets.weather import weather_partitions
 
 weather_daily_schedule = ScheduleDefinition(
     name="weather_daily_schedule",
@@ -1979,7 +1979,7 @@ weather_daily_schedule = ScheduleDefinition(
 - [ ] **Step 2:** Write tests
 
 ```python
-from dagster_real_data.schedules.weather_schedule import weather_daily_schedule
+from dagster_pipeline.schedules.weather_schedule import weather_daily_schedule
 
 def test_weather_schedule_cron():
     assert weather_daily_schedule.cron_schedule == "0 23 * * *"
@@ -1997,13 +1997,13 @@ pytest tests/test_resources.py -v
 - [ ] **Step 4:** Commit
 
 ```bash
-git add src/dagster_real_data/schedules/weather_schedule.py src/dagster_real_data/schedules/__init__.py tests/test_resources.py
+git add src/dagster_pipeline/schedules/weather_schedule.py src/dagster_pipeline/schedules/__init__.py tests/test_resources.py
 git commit -m "feat: add weather_daily_schedule"
 ```
 
 ### Task 9.2: Create Wikimedia sensor
 
-- [ ] **Step 1:** Write `src/dagster_real_data/sensors/wiki_sensor.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/sensors/wiki_sensor.py`
 
 ```python
 """Wikimedia event sensor — triggers materialization on new events."""
@@ -2011,7 +2011,7 @@ import logging
 
 from dagster import SensorDefinition, RunRequest, SensorEvaluationContext, SkipReason
 
-from dagster_real_data.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
 
 logger = logging.getLogger(__name__)
 
@@ -2050,7 +2050,7 @@ def wikimedia_event_sensor(context: SensorEvaluationContext) -> RunRequest | Ski
 
 Hmm, but sensors and resources work differently. Let me keep it simpler — the sensor just checks if the raw asset has new data. For a proper demo, the sensor uses the resource's stream_events with a cursor:
 
-- [ ] **Step 1:** Write `src/dagster_real_data/sensors/wiki_sensor.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/sensors/wiki_sensor.py`
 
 ```python
 """Wikimedia event sensor — triggers materialization on new events."""
@@ -2171,7 +2171,7 @@ def wikimedia_event_sensor(context: SensorEvaluationContext):
 
 Let me just define it properly as a decorator:
 
-- [ ] **Step 1:** Write `src/dagster_real_data/sensors/wiki_sensor.py`
+- [ ] **Step 1:** Write `src/dagster_pipeline/sensors/wiki_sensor.py`
 
 ```python
 """Wikimedia event sensor — triggers materialization on new events."""
@@ -2210,7 +2210,7 @@ def wikimedia_event_sensor(context: SensorEvaluationContext) -> RunRequest | Ski
 - [ ] **Step 2:** Update `definitions.py` to include sensor
 
 ```python
-from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor
 
 defs = Definitions(
     ...
@@ -2221,7 +2221,7 @@ defs = Definitions(
 - [ ] **Step 3:** Write tests
 
 ```python
-from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor
 
 def test_wikimedia_sensor_has_correct_name():
     assert wikimedia_event_sensor.name == "wikimedia_event_sensor"
@@ -2239,7 +2239,7 @@ pytest tests/test_resources.py -v
 - [ ] **Step 5:** Commit
 
 ```bash
-git add src/dagster_real_data/sensors/wiki_sensor.py src/dagster_real_data/sensors/__init__.py src/dagster_real_data/definitions.py tests/test_resources.py
+git add src/dagster_pipeline/sensors/wiki_sensor.py src/dagster_pipeline/sensors/__init__.py src/dagster_pipeline/definitions.py tests/test_resources.py
 git commit -m "feat: add wikimedia_event_sensor with cursor-based incremental processing"
 ```
 
@@ -2327,7 +2327,7 @@ def sample_weather_dataframe():
 ```python
 def test_materialize_weather_pipeline(mock_open_meteo_resource):
     """Integration test: materialize weather_historical → weather_cleaned → weather_daily."""
-    from dagster_real_data.assets.weather import weather_historical, weather_cleaned, weather_daily
+    from dagster_pipeline.assets.weather import weather_historical, weather_cleaned, weather_daily
 
     context = MagicMock()
     context.partition_key = "2026-01-01"
@@ -2368,7 +2368,7 @@ git commit -m "feat: add integration tests and shared fixtures"
 
 ## Task 11: Finalize Definitions, Update README, Documentation
 
-**Files:** `src/dagster_real_data/definitions.py`, `README.md`, `docs/architecture.md`, `docs/api.md`
+**Files:** `src/dagster_pipeline/definitions.py`, `README.md`, `docs/architecture.md`, `docs/api.md`
 
 ### Task 11.1: Finalize `definitions.py`
 
@@ -2378,15 +2378,15 @@ git commit -m "feat: add integration tests and shared fixtures"
 """Dagster Definitions — central orchestration point."""
 from dagster import Definitions, AssetKey
 
-from dagster_real_data.assets.weather import weather_assets
-from dagster_real_data.assets.wikipedia import wiki_assets
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.io_manager import filesystem_io_manager
-from dagster_real_data.checks.weather_checks import weather_asset_checks
-from dagster_real_data.checks.wiki_checks import wiki_asset_checks
-from dagster_real_data.schedules.weather_schedule import weather_daily_schedule
-from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager
+from dagster_pipeline.checks.weather_checks import weather_asset_checks
+from dagster_pipeline.checks.wiki_checks import wiki_asset_checks
+from dagster_pipeline.schedules.weather_schedule import weather_daily_schedule
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor
 
 defs = Definitions(
     assets=[*weather_assets, *wiki_assets],
@@ -2404,13 +2404,13 @@ defs = Definitions(
 - [ ] **Step 2:** Verify it imports
 
 ```bash
-python -c "from dagster_real_data.definitions import defs; print('OK')"
+python -c "from dagster_pipeline.definitions import defs; print('OK')"
 ```
 
 - [ ] **Step 3:** Commit
 
 ```bash
-git add src/dagster_real_data/definitions.py
+git add src/dagster_pipeline/definitions.py
 git commit -m "feat: finalize Definitions with all components"
 ```
 
@@ -2551,7 +2551,7 @@ Expected: All tests pass without internet access
 - [ ] **Step 2:** Verify definitions import
 
 ```bash
-python -c "from dagster_real_data.definitions import defs; print('Definitions loaded')"
+python -c "from dagster_pipeline.definitions import defs; print('Definitions loaded')"
 ```
 
 - [ ] **Step 3:** Verify `dagster dev` starts

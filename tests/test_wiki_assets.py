@@ -1,7 +1,7 @@
 """Tests for wiki assets."""
 import pandas as pd
 
-from dagster_real_data.assets.wikipedia import wiki_partitions
+from dagster_pipeline.assets.wikipedia import wiki_partitions
 
 
 def test_wiki_events_raw_ingests():

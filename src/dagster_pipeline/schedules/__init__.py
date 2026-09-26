@@ -1,0 +1,1 @@
+from dagster_pipeline.schedules.weather_schedule import weather_daily_schedule

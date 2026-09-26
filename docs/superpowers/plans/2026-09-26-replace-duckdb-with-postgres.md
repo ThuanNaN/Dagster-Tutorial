@@ -16,7 +16,7 @@
 - Follow existing `ConfigurableResource` pattern (class-based, NOT dataclass)
 - Follow existing asset naming conventions: `asset(name="...")` with `io_manager_key`
 - Existing tests in `tests/` use `pytest`, `pytest-mock`, `responses`
-- All new code in `src/dagster_real_data/`, tests in `tests/`
+- All new code in `src/dagster_pipeline/`, tests in `tests/`
 - PostgreSQL runs via docker-compose on port 5432
 - `psycopg2-binary` for database connectivity (not `duckdb`)
 
@@ -68,8 +68,8 @@ git commit -m "feat: replace duckdb with psycopg2-binary dependency"
 ### Task 2: Create PostgresResource
 
 **Files:**
-- Create: `src/dagster_real_data/resources/postgres.py`
-- Modify: `src/dagster_real_data/resources/__init__.py`
+- Create: `src/dagster_pipeline/resources/postgres.py`
+- Modify: `src/dagster_pipeline/resources/__init__.py`
 - Test: `tests/test_resources.py`
 
 **Interfaces:**
@@ -83,7 +83,7 @@ git commit -m "feat: replace duckdb with psycopg2-binary dependency"
 Add to `tests/test_resources.py`:
 
 ```python
-from dagster_real_data.resources.postgres import PostgresResource
+from dagster_pipeline.resources.postgres import PostgresResource
 
 def test_postgres_resource_default_config():
     resource = PostgresResource()
@@ -106,7 +106,7 @@ Expected: FAIL — `PostgresResource` not defined yet.
 
 - [ ] **Step 3: Implement PostgresResource**
 
-Create `src/dagster_real_data/resources/postgres.py`:
+Create `src/dagster_pipeline/resources/postgres.py`:
 
 ```python
 """PostgreSQL resource for analytical query layer."""
@@ -140,10 +140,10 @@ class PostgresResource(ConfigurableResource):
 Replace the DuckDBResource import with PostgresResource:
 
 ```python
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.io_manager import filesystem_io_manager
-from dagster_real_data.resources.postgres import PostgresResource
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager
+from dagster_pipeline.resources.postgres import PostgresResource
 ```
 
 - [ ] **Step 5: Run tests to verify they pass**
@@ -154,7 +154,7 @@ Expected: All tests PASS (including existing and new PostgresResource tests).
 - [ ] **Step 6: Commit**
 
 ```bash
-git add src/dagster_real_data/resources/postgres.py src/dagster_real_data/resources/__init__.py tests/test_resources.py
+git add src/dagster_pipeline/resources/postgres.py src/dagster_pipeline/resources/__init__.py tests/test_resources.py
 git commit -m "feat: add PostgresResource configurable resource"
 ```
 
@@ -163,9 +163,9 @@ git commit -m "feat: add PostgresResource configurable resource"
 ### Task 3: Create PostgresLoadAsset
 
 **Files:**
-- Create: `src/dagster_real_data/assets/postgres_loader.py`
-- Modify: `src/dagster_real_data/assets/__init__.py`
-- Modify: `src/dagster_real_data/definitions.py`
+- Create: `src/dagster_pipeline/assets/postgres_loader.py`
+- Modify: `src/dagster_pipeline/assets/__init__.py`
+- Modify: `src/dagster_pipeline/definitions.py`
 - Test: `tests/test_postgres_loader.py`
 
 **Interfaces:**
@@ -182,8 +182,8 @@ Create `tests/test_postgres_loader.py`:
 import pandas as pd
 import psycopg2
 from unittest.mock import MagicMock, patch
-from dagster_real_data.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
-from dagster_real_data.resources.io_manager import ASSET_TIERS
+from dagster_pipeline.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
+from dagster_pipeline.resources.io_manager import ASSET_TIERS
 
 
 def test_postgres_load_asset_creates_tables(tmp_path):
@@ -223,7 +223,7 @@ Expected: FAIL — `PostgresLoadAsset` not defined yet.
 
 - [ ] **Step 3: Implement PostgresLoadAsset**
 
-Create `src/dagster_real_data/assets/postgres_loader.py`:
+Create `src/dagster_pipeline/assets/postgres_loader.py`:
 
 ```python
 """PostgreSQL loader asset — loads parquet data into PostgreSQL tables."""
@@ -234,8 +234,8 @@ from typing import Any
 import pandas as pd
 from dagster import AssetExecutionContext, asset, AssetIn
 
-from dagster_real_data.resources.postgres import PostgresResource
-from dagster_real_data.resources.io_manager import ASSET_TIERS
+from dagster_pipeline.resources.postgres import PostgresResource
+from dagster_pipeline.resources.io_manager import ASSET_TIERS
 
 logger = logging.getLogger(__name__)
 
@@ -306,9 +306,9 @@ def postgres_tables_load(
 Replace the duckdb_loader import:
 
 ```python
-from dagster_real_data.assets.weather import weather_assets
-from dagster_real_data.assets.wikipedia import wiki_assets
-from dagster_real_data.assets.postgres_loader import postgres_tables_load
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
+from dagster_pipeline.assets.postgres_loader import postgres_tables_load
 ```
 
 - [ ] **Step 5: Update `definitions.py`**
@@ -319,17 +319,17 @@ Replace all DuckDB references:
 """Dagster Definitions — central orchestration point."""
 from dagster import Definitions
 
-from dagster_real_data.assets.weather import weather_assets
-from dagster_real_data.assets.wikipedia import wiki_assets
-from dagster_real_data.assets.postgres_loader import postgres_tables_load
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.io_manager import filesystem_io_manager
-from dagster_real_data.resources.postgres import PostgresResource
-from dagster_real_data.checks.weather_checks import weather_asset_checks
-from dagster_real_data.checks.wiki_checks import wiki_asset_checks
-from dagster_real_data.schedules.weather_schedule import weather_daily_schedule
-from dagster_real_data.sensors.wiki_sensor import wikimedia_event_sensor
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
+from dagster_pipeline.assets.postgres_loader import postgres_tables_load
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager
+from dagster_pipeline.resources.postgres import PostgresResource
+from dagster_pipeline.checks.weather_checks import weather_asset_checks
+from dagster_pipeline.checks.wiki_checks import wiki_asset_checks
+from dagster_pipeline.schedules.weather_schedule import weather_daily_schedule
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor
 
 defs = Definitions(
     assets=[*weather_assets, *wiki_assets, postgres_tables_load],
@@ -353,7 +353,7 @@ Expected: All tests PASS.
 - [ ] **Step 7: Commit**
 
 ```bash
-git add src/dagster_real_data/assets/postgres_loader.py src/dagster_real_data/assets/__init__.py src/dagster_real_data/definitions.py tests/test_postgres_loader.py
+git add src/dagster_pipeline/assets/postgres_loader.py src/dagster_pipeline/assets/__init__.py src/dagster_pipeline/definitions.py tests/test_postgres_loader.py
 git commit -m "feat: add PostgresLoadAsset and register in Dagster Definitions"
 ```
 
@@ -445,7 +445,7 @@ Remove the old `DuckDBResource` tests and `import duckdb`:
 
 Remove these lines if present:
 ```python
-from dagster_real_data.resources.duckdb import DuckDBResource
+from dagster_pipeline.resources.duckdb import DuckDBResource
 ```
 
 And remove the `test_duckdb_resource_default_config` and `test_duckdb_resource_connection_string` tests (already replaced with Postgres versions in Task 2).
@@ -459,8 +459,8 @@ Replace the entire file content with the test from Task 3 Step 1 (plus additiona
 import pandas as pd
 import psycopg2
 from unittest.mock import MagicMock, patch
-from dagster_real_data.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
-from dagster_real_data.resources.io_manager import ASSET_TIERS
+from dagster_pipeline.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
+from dagster_pipeline.resources.io_manager import ASSET_TIERS
 
 
 def test_postgres_load_asset_creates_tables(tmp_path):
@@ -492,7 +492,7 @@ Delete the old `tests/test_duckdb_loader.py`.
 
 - [ ] **Step 3: Remove any remaining duckdb imports from test files**
 
-Check all test files for `import duckdb` or `from dagster_real_data.resources.duckdb`:
+Check all test files for `import duckdb` or `from dagster_pipeline.resources.duckdb`:
 ```bash
 grep -r "duckdb\|DuckDB" tests/ src/
 ```
@@ -601,8 +601,8 @@ git commit -m "docs: replace DuckDB references with PostgreSQL in all documentat
 ### Task 7: Remove old DuckDB files and verify no references remain
 
 **Files:**
-- Remove: `src/dagster_real_data/resources/duckdb.py` (if still exists)
-- Remove: `src/dagster_real_data/assets/duckdb_loader.py` (if still exists)
+- Remove: `src/dagster_pipeline/resources/duckdb.py` (if still exists)
+- Remove: `src/dagster_pipeline/assets/duckdb_loader.py` (if still exists)
 
 **Interfaces:**
 - Produces: Zero remaining `duckdb`/`DuckDB` references in source and tests
@@ -610,7 +610,7 @@ git commit -m "docs: replace DuckDB references with PostgreSQL in all documentat
 - [ ] **Step 1: Remove old DuckDB source files**
 
 ```bash
-rm src/dagster_real_data/resources/duckdb.py src/dagster_real_data/assets/duckdb_loader.py 2>/dev/null || true
+rm src/dagster_pipeline/resources/duckdb.py src/dagster_pipeline/assets/duckdb_loader.py 2>/dev/null || true
 ```
 
 These should already have been replaced by `postgres.py` and `postgres_loader.py` in earlier tasks, but ensure they're gone.
@@ -627,7 +627,7 @@ Expected: All tests PASS.
 
 - [ ] **Step 4: Verify definitions load**
 
-Run: `python -c "from dagster_real_data.definitions import defs; print('Definitions OK:', len(defs.asset_keys))"`
+Run: `python -c "from dagster_pipeline.definitions import defs; print('Definitions OK:', len(defs.asset_keys))"`
 Expected: Prints "Definitions OK:" with correct asset count.
 
 - [ ] **Step 5: Final commit**

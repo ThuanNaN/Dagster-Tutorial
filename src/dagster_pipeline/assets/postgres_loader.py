@@ -6,8 +6,8 @@ from typing import Any
 import pandas as pd
 from dagster import AssetExecutionContext, asset, AssetIn
 
-from dagster_real_data.resources.postgres import PostgresResource
-from dagster_real_data.resources.io_manager import ASSET_TIERS
+from dagster_pipeline.resources.postgres import PostgresResource
+from dagster_pipeline.resources.io_manager import ASSET_TIERS
 
 logger = logging.getLogger(__name__)
 

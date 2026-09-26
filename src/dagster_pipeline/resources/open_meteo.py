@@ -3,8 +3,8 @@ import logging
 
 from dagster import ConfigurableResource, EnvVar
 
-from dagster_real_data.utils.http import HttpClient, HttpClientConfig
-from dagster_real_data.utils.time import format_date
+from dagster_pipeline.utils.http import HttpClient, HttpClientConfig
+from dagster_pipeline.utils.time import format_date
 
 logger = logging.getLogger(__name__)
 

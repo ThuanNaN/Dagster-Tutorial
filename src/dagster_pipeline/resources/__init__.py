@@ -1,0 +1,4 @@
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.postgres import PostgresResource
+from dagster_pipeline.resources.io_manager import filesystem_io_manager

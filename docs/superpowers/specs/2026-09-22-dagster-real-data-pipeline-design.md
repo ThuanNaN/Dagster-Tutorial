@@ -80,7 +80,7 @@ dagster-real-data-pipeline/
 ├── .env.example
 ├── .gitignore
 ├── src/
-│   └── dagster_real_data/
+│   └── dagster_pipeline/
 │       ├── __init__.py
 │       ├── definitions.py
 │       ├── assets/

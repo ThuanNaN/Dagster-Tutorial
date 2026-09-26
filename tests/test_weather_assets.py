@@ -2,8 +2,8 @@
 from unittest.mock import MagicMock
 import pandas as pd
 
-from dagster_real_data.assets.weather import weather_partitions
-from dagster_real_data.utils.time import date_range
+from dagster_pipeline.assets.weather import weather_partitions
+from dagster_pipeline.utils.time import date_range
 
 
 def _build_historical_data():

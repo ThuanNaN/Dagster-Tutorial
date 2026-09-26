@@ -5,10 +5,10 @@ import tempfile
 import json
 from pathlib import Path
 
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.resources.wikimedia import WikimediaResource
-from dagster_real_data.resources.postgres import PostgresResource
-from dagster_real_data.resources.io_manager import FilesystemIOManager
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.postgres import PostgresResource
+from dagster_pipeline.resources.io_manager import FilesystemIOManager
 
 
 def test_open_meteo_resource_creation():

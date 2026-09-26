@@ -5,8 +5,8 @@ from typing import Any
 import pandas as pd
 from dagster import AssetExecutionContext, asset, DailyPartitionsDefinition, AssetIn
 
-from dagster_real_data.resources.open_meteo import OpenMeteoResource
-from dagster_real_data.utils.time import format_date, parse_date, date_range
+from dagster_pipeline.resources.open_meteo import OpenMeteoResource
+from dagster_pipeline.utils.time import format_date, parse_date, date_range
 
 logger = logging.getLogger(__name__)
 

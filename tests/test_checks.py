@@ -1,6 +1,6 @@
 """Tests for asset checks."""
 import pandas as pd
-from dagster_real_data.checks.weather_checks import (
+from dagster_pipeline.checks.weather_checks import (
     _temperature_not_null_logic,
     _humidity_valid_logic,
     _precipitation_non_negative_logic,
@@ -10,7 +10,7 @@ from dagster_real_data.checks.weather_checks import (
     precipitation_non_negative,
     minimum_row_count,
 )
-from dagster_real_data.checks.wiki_checks import (
+from dagster_pipeline.checks.wiki_checks import (
     _event_id_unique_logic,
     _timestamp_not_null_logic,
     _wiki_not_null_logic,

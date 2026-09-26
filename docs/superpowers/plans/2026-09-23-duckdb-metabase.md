@@ -18,7 +18,7 @@
 - Follow existing ConfigurableResource pattern (class-based, NOT dataclass)
 - Follow existing asset naming conventions: `asset(name="...")` with `io_manager_key`
 - Existing tests in `tests/` use `pytest`, `responses`, `pytest-mock`
-- All new code in `src/dagster_real_data/`, tests in `tests/`
+- All new code in `src/dagster_pipeline/`, tests in `tests/`
 - PostgreSQL runs on port 5432 via docker-compose
 - `psycopg2-binary` for database connectivity (not `duckdb`)
 
@@ -51,11 +51,11 @@ git commit -m "feat: replace duckdb with psycopg2-binary dependency"
 
 ### Task 2: Create PostgresResource
 
-**Files:** `src/dagster_real_data/resources/postgres.py`, `src/dagster_real_data/resources/__init__.py`, `tests/test_resources.py`
+**Files:** `src/dagster_pipeline/resources/postgres.py`, `src/dagster_pipeline/resources/__init__.py`, `tests/test_resources.py`
 
 - [ ] **Step 1: Create PostgresResource**
 
-Create `src/dagster_real_data/resources/postgres.py` with `host`, `port`, `database`, `user`, `password` fields, `get_connection_url()` returning `postgresql://...`, and `get_connection()` returning a psycopg2 connection.
+Create `src/dagster_pipeline/resources/postgres.py` with `host`, `port`, `database`, `user`, `password` fields, `get_connection_url()` returning `postgresql://...`, and `get_connection()` returning a psycopg2 connection.
 
 - [ ] **Step 2: Update `resources/__init__.py`** to import `PostgresResource` instead of `DuckDBResource`.
 
@@ -64,7 +64,7 @@ Create `src/dagster_real_data/resources/postgres.py` with `host`, `port`, `datab
 - [ ] **Step 4: Run tests and commit**
 
 ```bash
-git add src/dagster_real_data/resources/postgres.py src/dagster_real_data/resources/__init__.py tests/test_resources.py
+git add src/dagster_pipeline/resources/postgres.py src/dagster_pipeline/resources/__init__.py tests/test_resources.py
 git commit -m "feat: add PostgresResource configurable resource"
 ```
 
@@ -72,11 +72,11 @@ git commit -m "feat: add PostgresResource configurable resource"
 
 ### Task 3: Create PostgresLoadAsset
 
-**Files:** `src/dagster_real_data/assets/postgres_loader.py`, `src/dagster_real_data/assets/__init__.py`, `src/dagster_real_data/definitions.py`, `tests/test_postgres_loader.py`
+**Files:** `src/dagster_pipeline/assets/postgres_loader.py`, `src/dagster_pipeline/assets/__init__.py`, `src/dagster_pipeline/definitions.py`, `tests/test_postgres_loader.py`
 
 - [ ] **Step 1: Create PostgresLoadAsset**
 
-Create `src/dagster_real_data/assets/postgres_loader.py` using `psycopg2` and `pandas.DataFrame.to_sql()` instead of `duckdb.connect()` and `CREATE TABLE AS SELECT`. Asset renamed to `postgres_tables_load`.
+Create `src/dagster_pipeline/assets/postgres_loader.py` using `psycopg2` and `pandas.DataFrame.to_sql()` instead of `duckdb.connect()` and `CREATE TABLE AS SELECT`. Asset renamed to `postgres_tables_load`.
 
 - [ ] **Step 2: Update `assets/__init__.py`** and `definitions.py` to register `postgres_tables_load` and `PostgresResource`.
 
@@ -85,7 +85,7 @@ Create `src/dagster_real_data/assets/postgres_loader.py` using `psycopg2` and `p
 - [ ] **Step 4: Run tests and commit**
 
 ```bash
-git add src/dagster_real_data/assets/postgres_loader.py src/dagster_real_data/assets/__init__.py src/dagster_real_data/definitions.py tests/test_postgres_loader.py
+git add src/dagster_pipeline/assets/postgres_loader.py src/dagster_pipeline/assets/__init__.py src/dagster_pipeline/definitions.py tests/test_postgres_loader.py
 git commit -m "feat: add PostgresLoadAsset and register in Dagster Definitions"
 ```
 
@@ -156,7 +156,7 @@ git commit -m "docs: replace DuckDB references with PostgreSQL"
 
 ### Task 7: Remove old DuckDB files and verify
 
-**Files:** `src/dagster_real_data/resources/duckdb.py` (remove), `src/dagster_real_data/assets/duckdb_loader.py` (remove)
+**Files:** `src/dagster_pipeline/resources/duckdb.py` (remove), `src/dagster_pipeline/assets/duckdb_loader.py` (remove)
 
 - [ ] **Step 1: Remove old DuckDB source files** if they still exist.
 
@@ -172,7 +172,7 @@ Expected: No results (except in this plan file or spec file).
 
 ```bash
 pytest tests/ -v
-python -c "from dagster_real_data.definitions import defs; print('Definitions OK:', len(defs.asset_keys))"
+python -c "from dagster_pipeline.definitions import defs; print('Definitions OK:', len(defs.asset_keys))"
 ```
 
 - [ ] **Step 4: Final commit**

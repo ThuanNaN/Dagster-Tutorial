@@ -1,8 +1,8 @@
 """Tests for Postgres loader asset."""
 import pandas as pd
 from unittest.mock import MagicMock
-from dagster_real_data.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
-from dagster_real_data.resources.io_manager import ASSET_TIERS
+from dagster_pipeline.assets.postgres_loader import PostgresLoadAsset, ASSET_TO_TABLE
+from dagster_pipeline.resources.io_manager import ASSET_TIERS
 
 
 def test_postgres_load_asset_creates_tables(tmp_path):

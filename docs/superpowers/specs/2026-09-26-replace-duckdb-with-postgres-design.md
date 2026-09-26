@@ -112,11 +112,11 @@ The following are removed entirely:
 
 | File | Action | Details |
 |------|--------|---------|
-| `src/dagster_real_data/resources/duckdb.py` | **Rename** → `postgres.py` | `DuckDBResource` → `PostgresResource`; add `user`, `password` fields; replace `get_jdbc_url()` with `get_connection_url()` using `postgresql://` |
-| `src/dagster_real_data/assets/duckdb_loader.py` | **Rewrite** → `postgres_loader.py` | Replace `import duckdb` with `import psycopg2`; replace `conn.execute("CREATE TABLE AS SELECT")` with `df.to_sql()`; rename `DuckDBLoadAsset` → `PostgresLoadAsset`; rename `duckdb_tables_load` → `postgres_tables_load` |
-| `src/dagster_real_data/resources/__init__.py` | **Update** | Swap `DuckDBResource` import for `PostgresResource` |
-| `src/dagster_real_data/assets/__init__.py` | **Update** | Swap `duckdb_loader` import for `postgres_loader` |
-| `src/dagster_real_data/definitions.py` | **Update** | Replace `DuckDBResource()` with `PostgresResource()`, swap imports |
+| `src/dagster_pipeline/resources/duckdb.py` | **Rename** → `postgres.py` | `DuckDBResource` → `PostgresResource`; add `user`, `password` fields; replace `get_jdbc_url()` with `get_connection_url()` using `postgresql://` |
+| `src/dagster_pipeline/assets/duckdb_loader.py` | **Rewrite** → `postgres_loader.py` | Replace `import duckdb` with `import psycopg2`; replace `conn.execute("CREATE TABLE AS SELECT")` with `df.to_sql()`; rename `DuckDBLoadAsset` → `PostgresLoadAsset`; rename `duckdb_tables_load` → `postgres_tables_load` |
+| `src/dagster_pipeline/resources/__init__.py` | **Update** | Swap `DuckDBResource` import for `PostgresResource` |
+| `src/dagster_pipeline/assets/__init__.py` | **Update** | Swap `duckdb_loader` import for `postgres_loader` |
+| `src/dagster_pipeline/definitions.py` | **Update** | Replace `DuckDBResource()` with `PostgresResource()`, swap imports |
 | `pyproject.toml` | **Update** | Replace `duckdb>=1.5` with `psycopg2-binary>=2.9` |
 
 ### 4.2 Docker & Infrastructure

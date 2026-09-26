@@ -1,0 +1,1 @@
+from dagster_pipeline.sensors.wiki_sensor import wikimedia_event_sensor

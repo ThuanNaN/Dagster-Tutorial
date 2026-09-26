@@ -4,7 +4,7 @@ import logging
 import pandas as pd
 from dagster import AssetExecutionContext, asset, DailyPartitionsDefinition, AssetIn
 
-from dagster_real_data.resources.wikimedia import WikimediaResource
+from dagster_pipeline.resources.wikimedia import WikimediaResource
 
 logger = logging.getLogger(__name__)
 

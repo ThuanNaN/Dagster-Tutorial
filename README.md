@@ -1,4 +1,4 @@
-# Dagster Real Data Pipeline
+# Dagster Pipeline
 
 A Dagster data engineering demo project using real public APIs:
 
@@ -9,7 +9,7 @@ A Dagster data engineering demo project using real public APIs:
 
 ```bash
 git clone <repo-url>
-cd dagster-real-data-pipeline
+cd dagster-pipeline
 
 cp .env.example .env
 pip install -e ".[dev]"

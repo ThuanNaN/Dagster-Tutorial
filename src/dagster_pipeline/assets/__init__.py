@@ -1,0 +1,3 @@
+from dagster_pipeline.assets.weather import weather_assets
+from dagster_pipeline.assets.wikipedia import wiki_assets
+from dagster_pipeline.assets.postgres_loader import postgres_tables_load
