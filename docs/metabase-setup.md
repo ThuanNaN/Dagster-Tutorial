@@ -1,29 +1,31 @@
-# Metabase Setup for DuckDB
+# Metabase Setup for PostgreSQL
 
 ## Prerequisites
-- DuckDB server running (see `scripts/start_duckdb_server.sh`)
+- PostgreSQL running (see `docker-compose up`)
 - Metabase installed (download from https://www.metabase.com/)
 
-## Connect Metabase to DuckDB
+## Connect Metabase to PostgreSQL
 
-### 1. Start DuckDB Server
+### 1. Start PostgreSQL
 ```bash
-./scripts/start_duckdb_server.sh ./data 8080
+docker-compose up -d
 ```
 
 ### 2. Add Database in Metabase
 1. Open Metabase (default: `http://localhost:3000`)
 2. Go to **Settings → Databases → Add Database**
-3. Select **DuckDB** as the database type
+3. Select **PostgreSQL** as the database type
 4. Enter connection details:
    - **Host**: `localhost`
-   - **Port**: `8080`
-   - **Database**: `mydb.duckdb`
-   - **JDBC URL**: `jdbc:duckdb:http://localhost:8080/mydb.duckdb`
+   - **Port**: `5432`
+   - **Database**: `mydb`
+   - **Username**: `postgres`
+   - **Password**: `postgres`
+   - **JDBC URL**: `jdbc:postgresql://localhost:5432/mydb`
 
 ### 3. Verify Connection
 - Click **Test Connection** in Metabase
-- Should see tables: `weather_historical`, `weather_hourly`, `weather_daily`, etc.
+- Should see tables: `weather_historical`, `weather_hourly`, `weather_forecast`, `wiki_events_raw`, etc.
 
 ### 4. Create Dashboards
 - Click **New → Question** to explore data

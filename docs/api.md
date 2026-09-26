@@ -2,6 +2,22 @@
 
 ## Resources
 
+### PostgresResource
+
+`ConfigurableResource` configured via environment variables.
+
+| Field | Type | Default |
+|-------|------|---------|
+| `host` | `str` | `"localhost"` |
+| `port` | `int` | `5432` |
+| `database` | `str` | `"mydb"` |
+| `user` | `str` | `"postgres"` |
+| `password` | `str` | `"postgres"` |
+
+**Methods:**
+- `get_connection_url()` — Returns `postgresql://user:password@host:port/database`
+- `get_connection()` — Returns a `psycopg2` connection object
+
 ### OpenMeteoResource
 
 `ConfigurableResource` configured via environment variables.
@@ -55,6 +71,12 @@
 | `wiki_events_cleaned` | wiki_events_raw | `pd.DataFrame` | Cleaned & deduplicated |
 | `wiki_events_by_hour` | wiki_events_cleaned | `pd.DataFrame` | Hourly aggregations |
 | `wiki_daily_analytics` | wiki_events_by_hour | `pd.DataFrame` | Daily summaries |
+
+### Postgres Asset
+
+| Asset | Input | Output | Description |
+|-------|-------|--------|-------------|
+| `postgres_tables` | weather_historical, weather_hourly, weather_forecast, wiki_events_raw | — | Loads parquet data into PostgreSQL tables |
 
 ## Asset Checks
 
