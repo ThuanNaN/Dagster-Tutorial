@@ -1,5 +1,6 @@
 """PostgreSQL resource for analytical query layer."""
 import psycopg2
+from sqlalchemy import create_engine
 from dagster import ConfigurableResource
 
 
@@ -22,3 +23,7 @@ class PostgresResource(ConfigurableResource):
             user=self.user,
             password=self.password,
         )
+
+    def get_engine(self):
+        """Return a SQLAlchemy engine for pandas to_sql()."""
+        return create_engine(self.get_connection_url())

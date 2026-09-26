@@ -24,7 +24,7 @@ class PostgresLoadAsset:
 
     def load_to_postgres(self) -> None:
         """Load all parquet files into PostgreSQL tables."""
-        conn = self.postgres.get_connection()
+        engine = self.postgres.get_engine()
         try:
             for asset_name, tier in ASSET_TIERS.items():
                 parquet_path = self.data_dir / tier / asset_name
@@ -41,13 +41,13 @@ class PostgresLoadAsset:
 
                     table_name = ASSET_TO_TABLE.get(asset_name, asset_name)
                     df = pd.read_parquet(parquet_file)
-                    df.to_sql(table_name, conn, if_exists="replace", index=False)
+                    df.to_sql(table_name, engine, if_exists="replace", index=False)
                     logger.info(
                         "Loaded %d rows from %s into PostgreSQL table %s",
                         len(df), parquet_file, table_name,
                     )
         finally:
-            conn.close()
+            engine.dispose()
 
 
 @asset(
