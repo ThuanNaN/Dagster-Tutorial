@@ -26,4 +26,4 @@ class PostgresResource(ConfigurableResource):
 
     def get_engine(self):
         """Return a SQLAlchemy engine for pandas to_sql()."""
-        return create_engine(self.get_connection_url())
+        return create_engine(f"postgresql+psycopg2://{self.user}:{self.password}@{self.host}:{self.port}/{self.database}")
