@@ -2,11 +2,13 @@
 
 ## Prerequisites
 - PostgreSQL running (see `docker-compose up`)
-- Metabase installed (download from https://www.metabase.com/)
+- Metabase running (see `docker-compose up`)
 
 ## Connect Metabase to PostgreSQL
 
-### 1. Start PostgreSQL
+> **Important:** Metabase runs inside a Docker container. Use `postgres` as the host (the Docker service name), not `localhost`.
+
+### 1. Start both services
 ```bash
 docker-compose up -d
 ```
@@ -16,12 +18,12 @@ docker-compose up -d
 2. Go to **Settings → Databases → Add Database**
 3. Select **PostgreSQL** as the database type
 4. Enter connection details:
-   - **Host**: `localhost`
+   - **Host**: `postgres` *(Docker service name, NOT localhost)*
    - **Port**: `5432`
    - **Database**: `mydb`
    - **Username**: `postgres`
    - **Password**: `postgres`
-   - **JDBC URL**: `jdbc:postgresql://localhost:5432/mydb`
+   - **JDBC URL**: `jdbc:postgresql://postgres:5432/mydb`
 
 ### 3. Verify Connection
 - Click **Test Connection** in Metabase
